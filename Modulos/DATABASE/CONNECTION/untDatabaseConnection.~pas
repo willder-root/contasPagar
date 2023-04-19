@@ -1,0 +1,96 @@
+unit untDatabaseConnection;
+
+interface
+{ TConnection }
+  uses
+    Classes,SysUtils, windows, ComCtrls, ADODB, Dialogs;
+type
+  TConnection = class(TObject)
+  private
+    FDatabase: TADOConnection;
+    FSourceDescription: string;
+    FStringConnection: string;
+    procedure setFSourceDescription(const Value: string);
+    procedure BuildStringConnection;
+    function getDatabase: TADOConnection;
+  public
+    constructor Create(const sourceDescription: string ); overload;
+    constructor Create; overload;
+    destructor Destroy; override;
+    function connected: Boolean;
+  published
+    property SourceDescription: string read FSourceDescription write setFSourceDescription;
+    property Database: TADOConnection read getDatabase;
+
+  end;
+
+  ESourceDescriptionEmpty = class(Exception)
+  end;
+implementation
+
+
+{ TConnection }
+
+procedure TConnection.BuildStringConnection;
+begin
+  FStringConnection:= 'Provider=MSDASQL.1;Persist Security Info=False;Data Source='+
+  FSourceDescription;
+  FDatabase.ConnectionString:= FStringConnection;
+end;
+
+function TConnection.connected: Boolean;
+begin
+  BuildStringConnection;
+  Result:= False;
+  try
+    if not FDatabase.Connected then
+      FDatabase.Connected:= True;
+    Result:= true;
+  except
+    on e: Exception do
+    begin
+      if e.ClassName = 'EOleException'  then
+      begin
+        result:= False;
+      end
+    end;
+  end;
+end;
+
+constructor TConnection.Create(const sourceDescription: string );
+begin
+  inherited create;
+  FSourceDescription:= sourceDescription;
+  FDatabase := TADOConnection.Create(nil);
+end;
+
+constructor TConnection.Create;
+begin
+  inherited create;
+  FDatabase := TADOConnection.Create(nil);
+end;
+
+destructor TConnection.Destroy;
+begin
+  if FDatabase.Connected then
+    FDatabase.Connected:=False;
+  FreeAndNil(FDatabase);
+  inherited;
+end;
+
+
+function TConnection.getDatabase: TADOConnection;
+begin
+  if connected then
+    Result:= FDatabase;
+end;
+
+procedure TConnection.setFSourceDescription(const Value: string);
+begin
+  if Trim(Value) <> '' then
+    FSourceDescription := Value
+  else
+    raise ESourceDescriptionEmpty.Create('SourceDescription is empty');
+end;
+
+end.

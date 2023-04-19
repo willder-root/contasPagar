@@ -1,0 +1,29 @@
+#------------------------------------------------------------------------------
+VERSION = BWS.01
+#------------------------------------------------------------------------------
+!ifndef ROOT
+ROOT = $(MAKEDIR)\..
+!endif
+#------------------------------------------------------------------------------
+MAKE = $(ROOT)\bin\make.exe -$(MAKEFLAGS) -f$**
+DCC = $(ROOT)\bin\dcc32.exe $**
+BRCC = $(ROOT)\bin\brcc32.exe $**
+#------------------------------------------------------------------------------
+PROJECTS = ContasPagar.exe pkgBase.bpl pkgDatabase.bpl TestProject.exe
+#------------------------------------------------------------------------------
+default: $(PROJECTS)
+#------------------------------------------------------------------------------
+
+ContasPagar.exe: ContasPagar.dpr
+  $(DCC)
+
+pkgBase.bpl: Modulos\BASE\pkgBase.dpk
+  $(DCC)
+
+pkgDatabase.bpl: Modulos\DATABASE\pkgDatabase.dpk
+  $(DCC)
+
+TestProject.exe: @Test\TestProject.dpr
+  $(DCC)
+
+

@@ -1,0 +1,19 @@
+unit untQueryInterface;
+
+interface
+  uses
+    DB;
+    
+    type
+      IQuery = interface
+      ['{31A06DCC-4B56-4DF8-8A7D-133F46510B65}']
+      procedure Add(const Sql: string);
+      procedure AddParam(const Key: string; const Value: variant);
+      procedure Open(const Sql: string); overload;
+      procedure Open; overload;
+      procedure ExecuteQuery;
+      function Dataset: TDataset;
+implementation
+
+end.
+ 

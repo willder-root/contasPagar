@@ -1,0 +1,48 @@
+unit untAbertura;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ExtCtrls, CnsJpgGr, StdCtrls, ComCtrls;
+
+type
+  TfrmAbertura = class(TForm)
+    imgCarrgamento: TImage;
+    lblTituloCarregamento: TLabel;
+    pbCarregamento: TProgressBar;
+    lblPorcenteagemCarregamento: TLabel;
+    tmrCarregamento: TTimer;
+    procedure tmrCarregamentoTimer(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmAbertura: TfrmAbertura;
+
+implementation
+{$R *.dfm}
+
+procedure TfrmAbertura.tmrCarregamentoTimer(Sender: TObject);
+const
+  CARREGAMENTO_CONCLUIDO = 100;
+var
+  percentualCarregamento: Integer;
+begin
+  percentualCarregamento := pbCarregamento.Position;
+  if percentualCarregamento = CARREGAMENTO_CONCLUIDO then
+  begin
+    ModalResult := IDOK;
+  end
+  else
+  begin
+    percentualCarregamento:= percentualCarregamento + 1;
+    lblPorcenteagemCarregamento.Caption := IntToStr(percentualCarregamento)+'%';
+    pbCarregamento.Position:= percentualCarregamento;
+  end;
+end;
+
+end.

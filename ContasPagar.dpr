@@ -1,0 +1,28 @@
+program ContasPagar;
+
+uses
+  ExceptionLog,
+  Forms,
+  Windows,
+  SysUtils,
+  untLogin,
+  untAbertura in 'SRC\untAbertura.pas' {frmAbertura};
+
+{$R *.res}
+
+begin
+  frmAbertura:= TfrmAbertura.create(application);
+  try
+    if frmAbertura.ShowModal = IDOK then
+    begin
+      Application.Initialize;
+      Application.CreateForm(TfrmLogin, frmLogin);
+      Application.Run;
+    end;
+  finally
+    FreeAndNil(frmAbertura)
+  end;
+//  Application.Initialize;
+//  Application.CreateForm(TfrmAbertura, frmAbertura);
+//  Application.Run;
+end.
